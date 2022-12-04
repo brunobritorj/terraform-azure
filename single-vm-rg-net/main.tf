@@ -27,6 +27,7 @@ resource "azurerm_virtual_network" "main" {
   resource_group_name = azurerm_resource_group.main.name
 }
 
+# Create a Subnet
 resource "azurerm_subnet" "main" {
   name                 = var.azSubnetName
   resource_group_name  = azurerm_resource_group.main.name
@@ -34,6 +35,7 @@ resource "azurerm_subnet" "main" {
   address_prefixes     = var.azSubnetAddress
 }
 
+# Create a NIC
 resource "azurerm_network_interface" "main" {
   name                = "${var.azVmName}-nic1"
   location            = azurerm_resource_group.main.location
@@ -47,6 +49,7 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+# Create a Public IP
 resource "azurerm_public_ip" "main" {
   name                = "${var.azVmName}-extip-1"
   resource_group_name = azurerm_resource_group.main.name
@@ -54,15 +57,14 @@ resource "azurerm_public_ip" "main" {
   allocation_method   = "Dynamic"
 }
 
+# Create a Virtual Machine
 resource "azurerm_linux_virtual_machine" "main" {
   name                = var.azVmName
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_A1_v2"
   admin_username      = var.vmUser
-  network_interface_ids = [
-    azurerm_network_interface.main.id,
-  ]
+  network_interface_ids = [ azurerm_network_interface.main.id ]
 
   admin_ssh_key {
     username   = var.vmUser
@@ -80,4 +82,5 @@ resource "azurerm_linux_virtual_machine" "main" {
     sku       = "20_04-lts"
     version   = "latest"
   }
+
 }

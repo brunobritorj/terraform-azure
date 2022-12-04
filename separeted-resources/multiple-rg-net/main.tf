@@ -20,6 +20,13 @@ resource "azurerm_resource_group" "main" {
   location  = var.resourceGroupSpecs[count.index].location
 }
 
+# List with the Resource Group of each Virtual Network
+data "azurerm_resource_group" "main" {
+  depends_on  = [ azurerm_resource_group.main ]
+  count       = length(var.vnetSpecs)
+  name        = var.vnetSpecs[count.index].resourceGroupName
+}
+
 # Create the Az Virtual Network(s)
 resource "azurerm_virtual_network" "main" {
   count               = length(var.vnetSpecs)

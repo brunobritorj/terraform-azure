@@ -29,7 +29,7 @@ variable "vmSpecs" {
       size              = "Standard_A1_v2"
       vnetName          = "VNET-DEV"
       subnetName        = "Servers"
-      intIpAddr         = "10.1.0.2"
+      intIpAddr         = "10.1.0.11"
     },
     #{
     #  name              = "VM-PRD"
@@ -37,7 +37,7 @@ variable "vmSpecs" {
     #  size              = "Standard_A1_v2"
     #  vnetName          = "VNET-PRD"
     #  subnetName        = "Servers"
-    #  intIpAddr         = "10.2.0.2/24"
+    #  intIpAddr         = "10.2.0.11/24"
     #}
 
   ]

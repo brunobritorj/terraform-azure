@@ -1,4 +1,7 @@
 # Separated resources
 
 - Multiple Resource Groups and Virtual Networks
-- Multiple Virtual Machines
+- VM
+  - Multiple Virtual Machines
+  - Single VM with self-signed certificate downloaded from Key Vault
+- Key Vault
