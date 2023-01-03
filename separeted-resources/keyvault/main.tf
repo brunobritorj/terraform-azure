@@ -15,11 +15,6 @@ provider "azurerm" {
   features {}
 }
 
-# Fetch the Resource Group
-data "azurerm_resource_group" "main" {
-  name     = var.azResourceGroupName
-}
-
 # Create the Key Vault
 resource "azurerm_key_vault" "main" {
   name                        = var.azKeyvaultName
