@@ -13,16 +13,36 @@ provider "azurerm" {
   features {}
 }
 
+# Fetch the Resource Group(s) where resource will be placed
+data "azurerm_resource_group" "main" {
+  count = length(var.vmSpecs)
+
+  name  = var.vmSpecs[count.index].resourceGroupName
+}
+
+# Fetch the Subnet where resource will be attached to
+data "azurerm_subnet" "main" {
+  count = length(var.vmSpecs)
+
+  name                 = var.vmSpecs[count.index].subnetName
+  virtual_network_name = var.vmSpecs[count.index].vnetName
+  resource_group_name  = var.vmSpecs[count.index].resourceGroupName
+}
+
+# Create the Public IP address
 resource "azurerm_public_ip" "main" {
   count               = length(var.vmSpecs)
+
   name                = "${var.vmSpecs[count.index].name}-pubip"
   allocation_method   = "Dynamic"
   resource_group_name = data.azurerm_resource_group.main[count.index].name
   location            = data.azurerm_resource_group.main[count.index].location
 }
 
+# Create the vNIC
 resource "azurerm_network_interface" "main" {
   count               = length(var.vmSpecs)
+
   name                = "${var.vmSpecs[count.index].name}-nic"
   resource_group_name = data.azurerm_resource_group.main[count.index].name
   location            = data.azurerm_resource_group.main[count.index].location
@@ -36,8 +56,10 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+# Create the Virtual Machine
 resource "azurerm_linux_virtual_machine" "main" {
   count                 = length(var.vmSpecs)
+
   name                  = var.vmSpecs[count.index].name
   resource_group_name   = data.azurerm_resource_group.main[count.index].name
   location              = data.azurerm_resource_group.main[count.index].location

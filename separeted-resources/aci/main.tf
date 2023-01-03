@@ -13,16 +13,15 @@ provider "azurerm" {
   features {}
 }
 
-# Create a Resource Group
-resource "azurerm_resource_group" "main" {
+# Fetch the Resource Group
+data "azurerm_resource_group" "main" {
   name     = var.azResourceGroupName
-  location = var.azLocation
 }
 
 resource "azurerm_container_group" "main" {
   name                = "squid-proxy"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
   ip_address_type     = "Public"
   dns_name_label      = "aci-label"
   os_type             = "Linux"
