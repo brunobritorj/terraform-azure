@@ -1,74 +1,66 @@
 terraform {
-  
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=2.46.0"
+      version = "~> 4.0"
     }
   }
-
 }
 
 provider "azurerm" {
   features {}
 }
 
-# Create a Resource Group
 resource "azurerm_resource_group" "main" {
-  name     = var.azResourceGroupName
-  location = var.azLocation
+  name     = var.az_resource_group_name
+  location = var.az_location
 }
 
-# Create a Virtual Network
 resource "azurerm_virtual_network" "main" {
-  name                = var.azVnetName
-  address_space       = var.azVnetAddressSpace
+  name                = var.az_vnet_name
+  address_space       = var.az_vnet_address_space
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 }
 
-# Create a Subnet
 resource "azurerm_subnet" "main" {
-  name                 = var.azSubnetName
+  name                 = var.az_subnet_name
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = var.azSubnetAddress
+  address_prefixes     = var.az_subnet_address
 }
 
-# Create a NIC
 resource "azurerm_network_interface" "main" {
-  name                = "${var.azVmName}-nic1"
+  name                = "${var.az_vm_name}-nic1"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
   ip_configuration {
-    name                          = "${var.azVmName}-ip1"
+    name                          = "${var.az_vm_name}-ip1"
     subnet_id                     = azurerm_subnet.main.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = azurerm_public_ip.main.id
+    public_ip_address_id          = azurerm_public_ip.main.id
   }
 }
 
-# Create a Public IP
 resource "azurerm_public_ip" "main" {
-  name                = "${var.azVmName}-extip-1"
+  name                = "${var.az_vm_name}-extip-1"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   allocation_method   = "Static"
 }
 
-# Create a Virtual Machine
 resource "azurerm_linux_virtual_machine" "main" {
-  name                = var.azVmName
+  name                = var.az_vm_name
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   size                = "Standard_A1_v2"
-  admin_username      = var.vmUser
-  network_interface_ids = [ azurerm_network_interface.main.id ]
+  admin_username      = var.vm_user
+  network_interface_ids = [azurerm_network_interface.main.id]
 
   admin_ssh_key {
-    username   = var.vmUser
-    public_key = file(var.vmUserPubKeyFile)
+    username   = var.vm_user
+    public_key = file(var.vm_user_pub_key_file)
   }
 
   os_disk {
@@ -78,9 +70,8 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
     version   = "latest"
   }
-
 }
