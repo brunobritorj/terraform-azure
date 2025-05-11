@@ -51,9 +51,9 @@ variable "az_vm_image" {
   })
   description = "Image for the Azure Virtual Machine"
   default     = {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
+    publisher = "canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
   }
 }
 
