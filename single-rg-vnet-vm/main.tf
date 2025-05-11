@@ -54,7 +54,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   name                = var.az_vm_name
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  size                = "Standard_A1_v2"
+  size                = var.az_vm_size
   admin_username      = var.vm_user
   network_interface_ids = [azurerm_network_interface.main.id]
 

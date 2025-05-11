@@ -36,6 +36,27 @@ variable "az_vm_name" {
   default     = "VM001"
 }
 
+variable "az_vm_size" {
+  type        = string
+  description = "Size of the Azure Virtual Machine"
+  default     = "Standard_A1_v2"
+}
+
+variable "az_vm_image" {
+  type        = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = optional(string, "latest")
+  })
+  description = "Image for the Azure Virtual Machine"
+  default     = {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+  }
+}
+
 variable "vm_user" {
   type        = string
   description = "Username to access the VM"
