@@ -1,49 +1,70 @@
-variable "azLocation" {
-  type = string
+variable "az_location" {
+  type        = string
   description = "Region where the Azure resources will be created"
-  default = "eastus"
+  default     = "eastus"
 }
 
-variable "azResourceGroupName" {
-  type = string
+variable "az_resource_group_name" {
+  type        = string
   description = "Name for the Azure Resource Group"
-  default = "RG-VM-TEST"
+  default     = "RG-VM-TEST"
 }
 
-variable "azVnetName" {
-  type = string
+variable "az_vnet_name" {
+  type    = string
   default = "VNET-010-000-000-000-16"
 }
 
-variable "azVnetAddressSpace" {
-  type = list
+variable "az_vnet_address_space" {
+  type    = list
   default = ["10.0.0.0/16"]
 }
 
-variable "azSubnetName" {
-  type = string
+variable "az_subnet_name" {
+  type    = string
   default = "SNET-010-000-000-000-24"
 }
 
-variable "azSubnetAddress" {
-  type = list
+variable "az_subnet_address" {
+  type    = list
   default = ["10.0.0.0/24"]
 }
 
-variable "azVmName" {
-  type = string
+variable "az_vm_name" {
+  type        = string
   description = "Name for the Azure Virtual Machine"
-  default = "VM001"
+  default     = "VM001"
 }
 
-variable "vmUser" {
-  type = string
+variable "az_vm_size" {
+  type        = string
+  description = "Size of the Azure Virtual Machine"
+  default     = "Standard_A1_v2"
+}
+
+variable "az_vm_image" {
+  type        = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = optional(string, "latest")
+  })
+  description = "Image for the Azure Virtual Machine"
+  default     = {
+    publisher = "canonical"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
+  }
+}
+
+variable "vm_user" {
+  type        = string
   description = "Username to access the VM"
-  default = "bruno"
+  default     = "bruno"
 }
 
-variable "vmUserPubKeyFile" {
-  type = string
+variable "vm_user_pub_key_file" {
+  type        = string
   description = "Location of the Public Key file"
-  default = "~/.ssh/id_rsa.pub"
+  default     = "~/.ssh/id_rsa.pub"
 }
