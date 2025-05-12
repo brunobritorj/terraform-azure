@@ -68,3 +68,18 @@ variable "vm_user_pub_key_file" {
   description = "Location of the Public Key file"
   default     = "~/.ssh/id_rsa.pub"
 }
+
+variable "nsg_rules" {
+  type = list(object({
+    name                       = string
+    priority                   = number
+    direction                  = optional(string, "Inbound")
+    access                     = optional(string, "Allow")
+    protocol                   = optional(string, "Tcp")
+    source_port_range          = optional(string, "*")
+    destination_port_range     = string
+    source_address_prefix      = optional(string, "*")
+    destination_address_prefix = optional(string, "*")
+  }))
+  default = []
+}
