@@ -1,72 +1,99 @@
-variable "az_location" {
+variable "location" {
   type        = string
   description = "Region where the Azure resources will be created"
   default     = "eastus"
 }
 
-variable "az_resource_group_name" {
+variable "rg_name" {
   type        = string
   description = "Name for the Azure Resource Group"
   default     = "RG-VM-TEST"
 }
 
-variable "az_vnet_name" {
+variable "vnet_name" {
   type    = string
   default = "VNET-010-000-000-000-16"
 }
 
-variable "az_vnet_address_space" {
-  type    = list
+variable "vnet_address_space" {
+  type    = list(any)
   default = ["10.0.0.0/16"]
 }
 
-variable "az_subnet_name" {
+variable "subnet_name" {
   type    = string
   default = "SNET-010-000-000-000-24"
 }
 
-variable "az_subnet_address" {
-  type    = list
+variable "subnet_address" {
+  type    = list(any)
   default = ["10.0.0.0/24"]
 }
 
-variable "az_vm_name" {
+variable "vm_name" {
   type        = string
   description = "Name for the Azure Virtual Machine"
   default     = "VM001"
 }
 
-variable "az_vm_size" {
+variable "vm_size" {
   type        = string
   description = "Size of the Azure Virtual Machine"
-  default     = "Standard_A1_v2"
+  default     = "Standard_B1ls"
 }
 
-variable "az_vm_image" {
-  type        = object({
+variable "vm_cost_profile" {
+  type = object({
+    priority          = optional(string, "Spot")
+    eviction_policy   = optional(string, "Delete")
+    max_bid_price     = optional(string, -1)
+    os_disk_ephemeral = optional(bool, true)
+  })
+  default = {
+    priority          = "Spot"
+    eviction_policy   = "Delete"
+    max_bid_price     = -1
+    os_disk_ephemeral = true
+  }
+}
+
+variable "vm_image" {
+  type = object({
     publisher = string
     offer     = string
     sku       = string
     version   = optional(string, "latest")
   })
   description = "Image for the Azure Virtual Machine"
-  default     = {
+  default = {
     publisher = "canonical"
     offer     = "ubuntu-24_04-lts"
     sku       = "server"
   }
 }
 
-variable "vm_user" {
+variable "vm_username" {
   type        = string
   description = "Username to access the VM"
-  default     = "bruno"
+  default     = null
 }
 
-variable "vm_user_pub_key_file" {
+variable "vm_user_pubkey_file" {
   type        = string
   description = "Location of the Public Key file"
-  default     = "~/.ssh/id_rsa.pub"
+  default     = null
+}
+
+variable "cloud_init_filename" {
+  type        = string
+  description = "Path for a cloud-init.yaml file"
+  default     = null
+}
+
+variable "vm_domain_name_label" {
+  type        = string
+  description = "DNS entry"
+  default     = null
 }
 
 variable "nsg_rules" {
@@ -81,5 +108,11 @@ variable "nsg_rules" {
     source_address_prefix      = optional(string, "*")
     destination_address_prefix = optional(string, "*")
   }))
-  default = []
+  default = [
+    {
+      name                   = "ssh"
+      priority               = 100
+      destination_port_range = 22
+    }
+  ]
 }
