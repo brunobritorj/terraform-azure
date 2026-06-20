@@ -7,54 +7,57 @@ variable "location" {
 variable "rg_name" {
   type        = string
   description = "Name for the Azure Resource Group"
-  default     = "RG-VM-TEST"
+  default     = null
 }
 
 variable "vnet_name" {
   type    = string
-  default = "VNET-010-000-000-000-16"
+  default = null
 }
 
 variable "vnet_address_space" {
   type    = list(any)
-  default = ["10.0.0.0/16"]
+  default = ["192.168.0.0/16"]
 }
 
 variable "subnet_name" {
   type    = string
-  default = "SNET-010-000-000-000-24"
+  default = null
 }
 
 variable "subnet_address" {
   type    = list(any)
-  default = ["10.0.0.0/24"]
+  default = ["192.168.0.0/24"]
 }
 
 variable "vm_name" {
   type        = string
   description = "Name for the Azure Virtual Machine"
-  default     = "VM001"
+  default     = null
 }
 
 variable "vm_size" {
   type        = string
   description = "Size of the Azure Virtual Machine"
-  default     = "Standard_B1ls"
+  default     = "Standard_B1s"
 }
 
-variable "vm_cost_profile" {
-  type = object({
-    priority          = optional(string, "Spot")
-    eviction_policy   = optional(string, "Delete")
-    max_bid_price     = optional(string, -1)
-    os_disk_ephemeral = optional(bool, true)
-  })
-  default = {
-    priority          = "Spot"
-    eviction_policy   = "Delete"
-    max_bid_price     = -1
-    os_disk_ephemeral = true
-  }
+variable "vm_disk_size_gb" {
+  type        = number
+  description = "Disk size"
+  default     = null
+}
+
+variable "vm_priority" {
+  type        = string
+  description = "Whether VM is a Regular or Spot instances"
+  default     = "Regular"
+}
+
+variable "vm_os_ephemeral" {
+  type        = bool
+  description = "Wheter OS disk should be ephemeral or not"
+  default     = false
 }
 
 variable "vm_image" {
@@ -94,6 +97,11 @@ variable "vm_domain_name_label" {
   type        = string
   description = "DNS entry"
   default     = null
+}
+
+variable "nsg_name" {
+  type    = string
+  default = null
 }
 
 variable "nsg_rules" {

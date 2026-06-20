@@ -1,6 +1,6 @@
-# Single RG, Vnet and VM
+# Single RG, Vnet and VMSS
 
-It deploys a single VM on Azure with a public IP. Just it.
+It deploys a VMSS on Azure with a public IP attached to every instance.
 
 Using default values:
 - Use your current username as VM admin account.
